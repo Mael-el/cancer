@@ -1,0 +1,6 @@
+{
+  "name": "Ayidodé+",
+  "description": "Plateforme béninoise de prévention du cancer, dépistage et santé publique",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

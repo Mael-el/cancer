@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayidodé+ — Architecture & Spécifications Interfaces</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Atkinson+Hyperlegible:wght@400;700&family=Sora:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert: #00a86b;
+    --vert-profond: #007048;
+    --vert-brume: #e6f7f0;
+    --creme: #faf8f3;
+    --terracotta: #c25b3a;
+    --ocre: #d4a574;
+    --encre: #1a2e28;
+    --blanc: #ffffff;
+    --radius-carte: 32px 32px 8px 32px;
+    --radius-bouton: 20px 20px 6px 20px;
+    --shadow-douce: 0 8px 24px rgba(0, 168, 107, 0.08);
+    --shadow-bouton: 0 4px 0 var(--vert-profond);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-size: 20px;
+    line-height: 1.7;
+    background-color: var(--creme);
+    color: var(--encre);
+  }
+
+  h1, h2, h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h1 { font-size: 56px; }
+  h2 { font-size: 36px; }
+  h3 { font-size: 24px; }
+
+  .chiffre {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+  }
+
+  .ecran {
+    max-width: 420px;
+    margin: 40px auto;
+    background: var(--blanc);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 168, 107, 0.1);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--blanc);
+    border-bottom: 1px solid rgba(0, 168, 107, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--vert-profond);
+  }
+
+  .logo-cercle {
+    width: 32px;
+    height: 32px;
+    background: var(--vert);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+  }
+
+  .btn-header {
+    background: var(--vert);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .hero {
+    padding: 40px 24px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 200px;
+    height: 200px;
+    background: var(--vert-brume);
+    border-radius: 50%;
+    opacity: 0.6;
+    z-index: 0;
+  }
+
+  .hero > * { position: relative; z-index: 1; }
+
+  .hero h1 {
+    color: var(--encre);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 .accent {
+    color: var(--terracotta);
+  }
+
+  .hero p {
+    font-size: 20px;
+    color: var(--encre);
+    margin-bottom: 28px;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 60px;
+    border: none;
+    border-radius: var(--radius-bouton);
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+  }
+
+  .btn-principal {
+    background: var(--vert);
+    box-shadow: var(--shadow-bouton);
+  }
+
+  .btn-principal:hover {
+    background: var(--vert-profond);
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--vert-profond);
+  }
+
+  .btn-secondaire {
+    background: var(--terracotta);
+    box-shadow: 0 4px 0 #9a4429;
+  }
+
+  .btn-secondaire:hover {
+    background: #9a4429;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #9a4429;
+  }
+
+  .btn-contour {
+    background: transparent;
+    color: var(--vert-profond);
+    border: 2px solid var(--vert);
+    box-shadow: none;
+  }
+
+  .btn-contour:hover {
+    background: var(--vert-brume);
+  }
+
+  .section {
+    padding: 48px 24px;
+  }
+
+  .section-titre {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    color: var(--encre);
+    margin-bottom: 20px;
+  }
+
+  .grille-chiffres {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .carte-chiffre {
+    background: var(--vert-brume);
+    border-radius: 20px 20px 6px 20px;
+    padding: 16px 10px;
+    text-align: center;
+  }
+
+  .carte-chiffre .chiffre {
+    font-size: 28px;
+    color: var(--terracotta);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .carte-chiffre .label {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    color: var(--encre);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+  }
+
+  .carte-fonction {
+    background: var(--blanc);
+    border-top: 4px solid var(--vert-profond);
+    border-radius: var(--radius-carte);
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-douce);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .carte-fonction:hover {
+    transform: translateY(-3px);
+  }
+
+  .carte-fonction .icone {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .carte-fonction .texte {
+    flex: 1;
+  }
+
+  .carte-fonction .texte strong {
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    color: var(--encre);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .carte-fonction .texte span {
+    font-size: 14px;
+    color: #5a6b65;
+  }
+
+  .carte-fonction .fleche {
+    color: var(--vert);
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .formulaire {
+    background: var(--vert-brume);
+    border-radius: 24px;
+    padding: 24px;
+    margin-top: 20px;
+  }
+
+  .formulaire label {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    color: var(--encre);
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+
+  .formulaire input,
+  .formulaire select {
+    width: 100%;
+    height: 56px;
+    border: 2px solid rgba(0, 168, 107, 0.2);
+    border-radius: 14px;
+    padding: 0 16px;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-size: 16px;
+    background: var(--blanc);
+    color: var(--encre);
+  }
+
+  .chat {
+    background: var(--creme);
+    border-radius: 24px;
+    padding: 20px;
+    margin-top: 20px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  .bulle {
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    max-width: 85%;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .bulle-assistant {
+    background: var(--blanc);
+    border-left: 4px solid var(--vert-profond);
+    border-radius: 4px 20px 20px 20px;
+    color: var(--encre);
+  }
+
+  .bulle-user {
+    background: var(--vert-brume);
+    border-radius: 20px 20px 4px 20px;
+    color: var(--encre);
+    margin-left: auto;
+  }
+
+  .bulle .audio {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    color: var(--vert-profond);
+    cursor: pointer;
+  }
+
+  .chat-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .chat-input input {
+    flex: 1;
+    height: 56px;
+    border: 2px solid rgba(0, 168, 107, 0.2);
+    border-radius: 16px;
+    padding: 0 16px;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-size: 16px;
+    background: var(--blanc);
+  }
+
+  .chat-input button {
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background: var(--vert);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--shadow-bouton);
+  }
+
+  .cancer-header {
+    background: linear-gradient(135deg, var(--vert) 0%, var(--vert-profond) 100%);
+    color: white;
+    padding: 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cancer-header h2 {
+    color: white;
+    margin-bottom: 12px;
+    font-size: 28px;
+  }
+
+  .cancer-header .espoir {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    opacity: 0.95;
+    margin-bottom: 20px;
+  }
+
+  .audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .bloc-cancer {
+    padding: 24px;
+    border-bottom: 1px solid rgba(0, 168, 107, 0.1);
+  }
+
+  .bloc-cancer .numero {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    color: var(--ocre);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .bloc-cancer h3 {
+    color: var(--vert-profond);
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+
+  .budget-carte {
+    background: var(--vert-brume);
+    border-radius: var(--radius-carte);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .budget-carte .montant {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    color: var(--terracotta);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .budget-carte .ligne {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(0, 168, 107, 0.2);
+  }
+
+  .budget-carte .ligne:last-child {
+    border-bottom: none;
+    font-weight: bold;
+    color: var(--vert-profond);
+    margin-top: 8px;
+  }
+
+  .remplacer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 168, 107, 0.1);
+    font-size: 15px;
+  }
+
+  .remplacer .croix { color: var(--terracotta); font-size: 18px; }
+  .remplacer .check { color: var(--vert); font-size: 18px; }
+
+  .infirmier-hero {
+    background: var(--terracotta);
+    color: white;
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .bouton-grand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    height: 72px;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    background: var(--blanc);
+    color: var(--terracotta);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .centre-item {
+    background: var(--blanc);
+    border-left: 4px solid var(--vert);
+    border-radius: 4px 16px 16px 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-douce);
+  }
+
+  .centre-item .actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .centre-item .actions button {
+    flex: 1;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-appeler { background: var(--vert); color: white; }
+  .btn-itineraire { background: var(--vert-brume); color: var(--vert-profond); }
+
+  .progression {
+    height: 6px;
+    background: var(--vert-brume);
+    border-radius: 3px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .progression-bar {
+    height: 100%;
+    background: var(--vert);
+    border-radius: 3px;
+    width: 20%;
+  }
+
+  .option {
+    display: block;
+    background: var(--blanc);
+    border: 2px solid rgba(0, 168, 107, 0.2);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .resultat-carte {
+    background: linear-gradient(135deg, var(--vert) 0%, var(--vert-profond) 100%);
+    color: white;
+    border-radius: 24px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .resultat-carte .niveau {
+    font-family: 'Sora', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 12px 0;
+  }
+
+  .footer {
+    background: var(--vert-profond);
+    color: white;
+    padding: 24px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .footer .numero-vert {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .indicateur {
+    text-align: center;
+    margin: 40px auto 20px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    color: var(--vert-profond);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<!-- Ce document sert de référence canonique pour les 9 interfaces d'Ayidodé+ -->
+<div class="indicateur">Architecture validée — 9 Interfaces Ayidodé+</div>
+</body>
+</html>
